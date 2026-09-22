@@ -17,7 +17,10 @@ const EnvSchema = z.object({
   ALERT_MIN_CONFIDENCE: z.coerce.number().min(0).max(1).default(0.8),
   ALERT_REQUIRE_URGENT: z.string().default('true'),
   OPENAI_API_KEY: z.string().optional(),
-  OPENAI_MODEL: z.string().default('gpt-5.6')
+  OPENAI_MODEL: z.string().default('gpt-5.6'),
+  TELEGRAM_BOT_TOKEN: z.string().optional(),
+  TELEGRAM_CHAT_ID: z.string().optional(),
+  DISCORD_WEBHOOK_URL: z.string().url().optional()
 })
 
 export const env = EnvSchema.parse(process.env)
