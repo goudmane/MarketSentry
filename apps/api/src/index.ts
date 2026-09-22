@@ -3,8 +3,9 @@ import cors from '@fastify/cors'
 import { env, runtimeSettings } from './config.js'
 import { MarketSnapshotSchema } from './domain.js'
 import { createAnalyzer } from './analyzer-factory.js'
-import { ConsoleNotifier, WatcherEngine } from './watcher.js'
+import { WatcherEngine } from './watcher.js'
 import { HistoryRepository, RedisSetupStore } from './persistence.js'
+import { createNotifier } from './notifications.js'
 
 const app = Fastify({ logger: true })
 await app.register(cors, { origin: true })
@@ -13,7 +14,7 @@ const store = new RedisSetupStore(env.REDIS_URL)
 const history = new HistoryRepository(env.DATABASE_URL)
 await history.ensureSchema()
 
-const watcher = new WatcherEngine(createAnalyzer(), store, new ConsoleNotifier(), runtimeSettings)
+const watcher = new WatcherEngine(createAnalyzer(), store, createNotifier(), runtimeSettings)
 
 app.get('/health', async () => ({
   status: 'ok',
